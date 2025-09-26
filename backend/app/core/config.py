@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     
     # OpenAI Configuration
     OPENAI_API_KEY: str = ""
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
     
     # Environment
     ENVIRONMENT: str = "development"

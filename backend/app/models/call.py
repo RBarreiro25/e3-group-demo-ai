@@ -9,16 +9,26 @@ class CallBase(BaseModel):
     agent_configuration_id: str
 
 class CallCreate(CallBase):
-    pass
+    pickup_location: Optional[str] = None
+    delivery_location: Optional[str] = None
+    notes: Optional[str] = None
 
 class Call(CallBase):
     id: str
+    pickup_location: Optional[str] = None
+    delivery_location: Optional[str] = None
+    notes: Optional[str] = None
+    status: str = "pending"
     retell_call_id: Optional[str] = None
-    status: str = "initiated"
-    started_at: datetime
+    duration: Optional[int] = None
+    transcript: Optional[str] = None
+    structured_data: Optional[Dict[str, Any]] = None
+    emergency_triggered: Optional[bool] = False
+    emergency_type: Optional[str] = None
     completed_at: Optional[datetime] = None
     duration_seconds: Optional[int] = None
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
