@@ -280,8 +280,8 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
           </div>
           
           {currentCall && (
-            <div className="mt-3 p-2 bg-blue-50 rounded border">
-              <p className="text-sm font-medium">Active Call: {currentCall}</p>
+            <div className="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg backdrop-blur-sm">
+              <p className="text-sm font-medium text-foreground">Active Call: {currentCall}</p>
             </div>
           )}
         </CardContent>
@@ -313,16 +313,16 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
                           {formatTimestamp(turn.timestamp)}
                         </span>
                       </div>
-                      <div className="bg-blue-50 p-3 rounded-lg">
-                        <p className="text-sm">"{turn.user}"</p>
+                      <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg backdrop-blur-sm">
+                        <p className="text-sm text-foreground">"{turn.user}"</p>
                       </div>
                     </div>
                     <div className="flex flex-col space-y-1">
                       <Badge variant="secondary" className="text-xs w-fit">
                         AI Agent
                       </Badge>
-                      <div className="bg-purple-50 p-3 rounded-lg">
-                        <p className="text-sm">"{turn.agent}"</p>
+                      <div className="bg-purple-500/10 border border-purple-500/20 p-3 rounded-lg backdrop-blur-sm">
+                        <p className="text-sm text-foreground">"{turn.agent}"</p>
                       </div>
                     </div>
                     {index < conversationFlow.length - 1 && (
@@ -355,7 +355,7 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
             ) : (
               <div className="space-y-3">
                 {events.map((event, index) => (
-                  <div key={index} className="border rounded-lg p-3 bg-white">
+                  <div key={index} className="border border-blue-500/20 rounded-lg p-3 glass-card">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         {getEventIcon(event.data.event_type)}
@@ -378,7 +378,7 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
                     {event.data.user_input && (
                       <div className="mb-2">
                         <p className="text-xs font-medium text-blue-600">User:</p>
-                        <p className="text-sm bg-blue-50 p-2 rounded">
+                        <p className="text-sm bg-blue-500/10 border border-blue-500/20 p-2 rounded backdrop-blur-sm text-foreground">
                           "{event.data.user_input}"
                         </p>
                       </div>
@@ -387,7 +387,7 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
                     {event.data.agent_response && (
                       <div className="mb-2">
                         <p className="text-xs font-medium text-purple-600">Agent Response:</p>
-                        <p className="text-sm bg-purple-50 p-2 rounded">
+                        <p className="text-sm bg-purple-500/10 border border-purple-500/20 p-2 rounded backdrop-blur-sm text-foreground">
                           "{event.data.agent_response}"
                         </p>
                       </div>
@@ -405,7 +405,7 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
                     {event.data.error && (
                       <div className="mb-2">
                         <p className="text-xs font-medium text-red-600">Error:</p>
-                        <p className="text-sm bg-red-50 p-2 rounded text-red-700">
+                        <p className="text-sm bg-red-500/10 border border-red-500/20 p-2 rounded backdrop-blur-sm text-red-400">
                           {event.data.error}
                         </p>
                       </div>
@@ -423,7 +423,7 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
         <Card variant="glass" className="border-green-500/30 bg-green-500/10 animate-slide-up glow-on-hover">
           <CardHeader>
             <CardTitle className="heading-3 flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-green-400 animate-float" />
+              <CheckCircle className="h-5 w-5 text-green-400" />
               <span>Call Analysis Complete</span>
             </CardTitle>
             <CardDescription className="body-text-sm">
@@ -452,13 +452,13 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
             {completedCallData.retell_analysis && Object.keys(completedCallData.retell_analysis).length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">Structured Analysis</h3>
-                <div className="bg-white rounded-lg p-4 border">
+                <div className="glass-card rounded-lg p-4 border border-blue-500/20">
                   {Object.entries(completedCallData.retell_analysis)
                     .filter(([key]) => key !== 'custom_analysis_data')
                     .map(([key, value]) => (
-                    <div key={key} className="flex justify-between py-2 border-b border-gray-200 last:border-b-0">
-                      <span className="font-medium text-gray-700 capitalize">{key.replace(/_/g, ' ')}</span>
-                      <span className="text-gray-900">{String(value)}</span>
+                    <div key={key} className="flex justify-between py-2 border-b border-border/20 last:border-b-0">
+                      <span className="font-medium text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
+                      <span className="text-foreground font-medium">{String(value)}</span>
                     </div>
                   ))}
                 </div>
@@ -468,8 +468,8 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
             {/* Transcript */}
             <div>
               <h3 className="text-lg font-semibold mb-3">Call Transcript</h3>
-              <div className="bg-white rounded-lg p-4 max-h-64 overflow-y-auto border">
-                <pre className="whitespace-pre-wrap text-sm text-gray-700">
+              <div className="glass-card rounded-lg p-4 max-h-64 overflow-y-auto border border-blue-500/20">
+                <pre className="whitespace-pre-wrap text-sm text-foreground text-left font-mono">
                   {completedCallData.transcript || 'No transcript available'}
                 </pre>
               </div>
