@@ -132,24 +132,22 @@ const AgentConfigurationForm: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Agent Configuration</h2>
-          <p className="text-muted-foreground">
-            Configure the Logistics AI agent for driver check-ins and emergency protocols
-          </p>
-        </div>
+    <div className="section-spacing">
+      <div className="page-header">
+        <h2 className="heading-2">Agent Configuration</h2>
+        <p className="body-text">
+          Configure the Logistics AI agent for driver check-ins and emergency protocols
+        </p>
       </div>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         {/* Single Agent Configuration */}
-        <Card>
+        <Card variant="glass">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>{agent.name}</CardTitle>
-                <CardDescription>
+                <CardTitle className="heading-3">{agent.name}</CardTitle>
+                <CardDescription className="body-text-sm">
                   Configure prompts, voice settings, and behavior
                 </CardDescription>
               </div>
@@ -187,102 +185,74 @@ const AgentConfigurationForm: React.FC = () => {
                   }
                 }}
               />
-              <div className="flex items-center space-x-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                <div className="h-2 w-2 bg-amber-500 rounded-full"></div>
-                <p className="text-xs text-amber-700 dark:text-amber-300">
-                  <strong>Core Requirement:</strong> This prompt defines the agent's conversation logic and must include both standard and emergency protocols. Use {`{{variable_name}}`} for dynamic content.
-                </p>
-              </div>
             </div>
 
 
             {/* Advanced Settings - REQUIRED BY PROJECT SPECS */}
             <div className="space-y-4">
               <h4 className="font-medium">🔧 Advanced Voice Settings</h4>
-              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <p className="text-xs text-blue-700 dark:text-blue-300">
-                  <strong>Project Requirement:</strong> Must use Retell AI's advanced settings (backchanneling, filler words, interruption sensitivity) for human-like experience.
-                </p>
-              </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="interruption">Interruption Sensitivity (ms)</Label>
-                <Input
-                  id="interruption"
-                  type="number"
-                  value={agent.interruption_threshold}
-                  disabled={!isEditing}
-                  onChange={(e) => {
-                    if (isEditing) {
-                      setAgent(prev => ({ ...prev, interruption_threshold: parseInt(e.target.value) || 100 }))
-                    }
-                  }}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Lower = more sensitive to interruptions (50-300ms)
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="backchannel">🎙️ Enable Backchannel</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Allow "uh-huh", "mm-hmm", "I see" responses during user speech
-                    </p>
+              {/* Three fields in one row */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Interruption Sensitivity */}
+                <div className="space-y-2">
+                  <Label htmlFor="interruption">Interruption Sensitivity (ms)</Label>
+                  <div className="flex justify-center h-10 items-center">
+                    <Input
+                      id="interruption"
+                      type="number"
+                      value={agent.interruption_threshold}
+                      disabled={!isEditing}
+                      className="w-20"
+                      onChange={(e) => {
+                        if (isEditing) {
+                          setAgent(prev => ({ ...prev, interruption_threshold: parseInt(e.target.value) || 7 }))
+                        }
+                      }}
+                    />
                   </div>
-                  <Switch
-                    id="backchannel"
-                    checked={agent.enable_backchannel}
-                    disabled={!isEditing}
-                    onCheckedChange={(checked) => {
-                      if (isEditing) {
-                        setAgent(prev => ({ ...prev, enable_backchannel: checked }))
-                      }
-                    }}
-                  />
+                  <p className="text-xs text-muted-foreground">
+                    Lower = more sensitive to interruptions (1-100ms)
+                  </p>
                 </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="filler_words">🗣️ Enable Filler Words</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Add natural "um", "uh", "let me see" for realistic speech
-                    </p>
-                  </div>
-                  <Switch
-                    id="filler_words"
-                    checked={agent.enable_filler_words || false}
-                    disabled={!isEditing}
-                    onCheckedChange={(checked) => {
-                      if (isEditing) {
-                        setAgent(prev => ({ ...prev, enable_filler_words: checked }))
-                      }
-                    }}
-                  />
-                </div>
-                
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Status Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Settings className="h-5 w-5" />
-              <span>Agent Status</span>
-            </CardTitle>
-            <CardDescription>Current agent configuration and deployment status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
-                <div>
-                  <p className="text-sm font-medium text-green-800 dark:text-green-200">✅ Agent Ready</p>
-                  <p className="text-xs text-green-600 dark:text-green-400">
-                    Your agent is <strong>live and functional</strong>. Use the "Start Call" tab to trigger calls to drivers, or test in Retell's web interface first.
+                {/* Enable Backchannel */}
+                <div className="space-y-2">
+                  <Label htmlFor="backchannel">🎙️ Enable Backchannel</Label>
+                  <div className="flex justify-center h-10 items-center">
+                    <Switch
+                      id="backchannel"
+                      checked={agent.enable_backchannel}
+                      disabled={!isEditing}
+                      onCheckedChange={(checked) => {
+                        if (isEditing) {
+                          setAgent(prev => ({ ...prev, enable_backchannel: checked }))
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Allow "uh-huh", "mm-hmm", "I see" responses during user speech
+                  </p>
+                </div>
+                
+                {/* Enable Filler Words */}
+                <div className="space-y-2">
+                  <Label htmlFor="filler_words">🗣️ Enable Filler Words</Label>
+                  <div className="flex justify-center h-10 items-center">
+                    <Switch
+                      id="filler_words"
+                      checked={agent.enable_filler_words || false}
+                      disabled={!isEditing}
+                      onCheckedChange={(checked) => {
+                        if (isEditing) {
+                          setAgent(prev => ({ ...prev, enable_filler_words: checked }))
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Add natural "um", "uh", "let me see" for realistic speech
                   </p>
                 </div>
               </div>

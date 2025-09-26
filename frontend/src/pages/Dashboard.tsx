@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -7,8 +7,13 @@ import { Settings, BarChart3, Play, CheckCircle, AlertCircle, Phone, Activity } 
 import AgentConfigurationForm from '@/components/AgentConfigurationForm'
 import CallTriggerForm from '@/components/CallTriggerForm'
 import LiveConversationMonitor from '@/components/LiveConversationMonitor'
+import AppLayout from '@/components/layout/AppLayout'
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  // Props can be added here if needed
+}
+
+const Dashboard: React.FC<DashboardProps> = () => {
   const [activeTab, setActiveTab] = useState('overview')
   const [completedCallData, setCompletedCallData] = useState<any>(null)
   const [callInProgress, setCallInProgress] = useState(false)
@@ -35,158 +40,170 @@ const Dashboard: React.FC = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="container mx-auto py-8 px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-            🚛 Logistics AI Voice Platform
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300">
-            Manage driver check-ins and emergency protocols with intelligent voice agents
-          </p>
-        </div>
-
-        {/* Call Progress Indicator */}
-        {callInProgress && (
-          <div className="mb-6">
-            <Card className="border-blue-200 bg-blue-50">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="animate-pulse">
-                      <Phone className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-blue-900">Call in Progress</div>
-                      <div className="text-sm text-blue-700">
-                        Call ID: {currentCallId} • Listening for real-time events...
-                      </div>
-                    </div>
-                  </div>
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                    🔴 LIVE
-                  </Badge>
+    <AppLayout 
+      activeTab={activeTab} 
+      onTabChange={setActiveTab}
+      callInProgress={callInProgress}
+    >
+      {/* Call Progress Indicator */}
+      {callInProgress && (
+        <Card variant="elevated" className="border-primary/20 bg-primary/5 mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="animate-pulse">
+                  <Phone className="h-5 w-5 text-primary" />
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                <div>
+                  <div className="font-semibold text-foreground">Call in Progress</div>
+                  <div className="text-sm text-muted-foreground">
+                    Call ID: {currentCallId} • Listening for real-time events...
+                  </div>
+                </div>
+              </div>
+              <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30">
+                🔴 LIVE
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
+      {/* Mobile Navigation - Show only on mobile when sidebar is hidden */}
+      <div className="lg:hidden mb-6">
+        <div className="mobile-nav-grid">
+          {[
+            { id: 'overview', icon: BarChart3, title: 'Overview' },
+            { id: 'agents', icon: Settings, title: 'Configure' },
+            { id: 'new-call', icon: Play, title: 'Test Call' },
+            { id: 'results', icon: CheckCircle, title: 'Results' },
+            { id: 'monitor', icon: Activity, title: 'Live Monitor' }
+          ].map((tab, index) => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.id
+            return (
+              <Card
+                key={tab.id}
+                variant="glass"
+                className={`interactive-card glow-on-hover animate-fade-in ${
+                  isActive ? 'ring-2 ring-primary shadow-primary/25 scale-105' : ''
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <CardContent className="mobile-card-content text-center">
+                  <div className={`mb-2 ${isActive ? 'animate-float' : ''}`}>
+                    <Icon className={`mobile-icon-responsive mx-auto transition-colors duration-300 ${
+                      isActive ? 'text-primary' : 'text-muted-foreground'
+                    }`} />
+                  </div>
+                  <h3 className={`font-medium mobile-text-responsive transition-colors duration-300 ${
+                    isActive ? 'text-foreground' : 'text-muted-foreground'
+                  }`}>
+                    {tab.title}
+                  </h3>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
 
-        {/* Main Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview" className="flex items-center space-x-2">
-              <BarChart3 className="h-4 w-4" />
-              <span>Overview</span>
-            </TabsTrigger>
-            <TabsTrigger value="agents" className="flex items-center space-x-2">
-              <Settings className="h-4 w-4" />
-              <span>Configure</span>
-            </TabsTrigger>
-            <TabsTrigger value="new-call" className="flex items-center space-x-2">
-              <Play className="h-4 w-4" />
-              <span>Test Call</span>
-            </TabsTrigger>
-            <TabsTrigger value="results" className="flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4" />
-              <span>Results</span>
-            </TabsTrigger>
-            <TabsTrigger value="monitor" className="flex items-center space-x-2">
-              <Activity className="h-4 w-4" />
-              <span>Live Monitor</span>
-            </TabsTrigger>
-          </TabsList>
+      {/* Main Content */}
+      <div className="section-spacing">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
 
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
+          <TabsContent value="overview" className="section-spacing">
+            <div className="card-grid">
+              {/* Quick Actions */}
+              <Card variant="glass" className="animate-slide-up glow-on-hover" style={{ animationDelay: '0.1s' }}>
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Settings className="h-5 w-5" />
+                  <CardTitle className="heading-3 flex items-center space-x-2">
+                    <Play className="h-5 w-5 text-primary" />
                     <span>Quick Actions</span>
                   </CardTitle>
+                  <CardDescription className="body-text-sm">Rapid access to key platform functions</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button 
-                    onClick={() => setActiveTab('agents')} 
-                    className="w-full justify-start"
-                    variant="outline"
-                  >
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configure Agents
-                  </Button>
+                <CardContent className="space-y-3">
                   <Button 
                     onClick={() => setActiveTab('new-call')} 
+                    variant="glass"
                     className="w-full justify-start"
-                    variant="outline"
                   >
                     <Play className="h-4 w-4 mr-2" />
                     Start Test Call
                   </Button>
                   <Button 
                     onClick={() => setActiveTab('monitor')} 
-                    className="w-full justify-start"
                     variant="outline"
+                    className="w-full justify-start"
                   >
                     <Activity className="h-4 w-4 mr-2" />
                     Live Monitor
                   </Button>
+                  <Button 
+                    onClick={() => setActiveTab('agents')} 
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configure Agent
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card>
+              {/* AI Agent Status */}
+              <Card variant="glass" className="animate-slide-up glow-on-hover" style={{ animationDelay: '0.2s' }}>
                 <CardHeader>
-                  <CardTitle>AI Agent Status</CardTitle>
-                  <CardDescription>Logistics voice agent configuration</CardDescription>
+                  <CardTitle className="heading-3 flex items-center space-x-2">
+                    <Settings className="h-5 w-5 text-primary" />
+                    <span>AI Agent Status</span>
+                  </CardTitle>
+                  <CardDescription className="body-text-sm">Logistics voice agent configuration</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center justify-between p-3 border border-border/30 rounded-lg bg-card/20">
                     <div>
-                      <p className="font-medium">Logistics AI Agent</p>
-                      <p className="text-sm text-muted-foreground">Handles driver check-ins and emergency protocols dynamically</p>
+                      <p className="heading-4">Logistics AI Agent</p>
+                      <p className="body-text-sm">Handles driver check-ins and emergency protocols dynamically</p>
                     </div>
-                    <Badge variant="secondary">Active</Badge>
+                    <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">Active</Badge>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <Card>
+            {/* System Status - Full Width */}
+            <Card variant="glass" className="animate-slide-up glow-on-hover" style={{ animationDelay: '0.3s' }}>
               <CardHeader>
-                <CardTitle>System Status</CardTitle>
-                <CardDescription>Platform health and connectivity</CardDescription>
+                <CardTitle className="heading-3 flex items-center space-x-2">
+                  <Activity className="h-5 w-5 text-primary status-pulse" />
+                  <span>System Status</span>
+                </CardTitle>
+                <CardDescription className="body-text-sm">Platform health and connectivity</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>Retell AI Connection</span>
+                  <div className="flex items-center justify-between animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                    <span className="connection-indicator connected">
+                      <CheckCircle className="h-4 w-4 text-green-500 status-pulse" />
+                      <span className="body-text-sm text-foreground">Retell AI Connection</span>
                     </span>
-                    <Badge variant="secondary">Connected</Badge>
+                    <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30 animate-scale-in">Connected</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>Database Connection</span>
+                  <div className="flex items-center justify-between animate-fade-in" style={{ animationDelay: '0.5s' }}>
+                    <span className="connection-indicator connected">
+                      <CheckCircle className="h-4 w-4 text-green-500 status-pulse" />
+                      <span className="body-text-sm text-foreground">Database Connection</span>
                     </span>
-                    <Badge variant="secondary">Connected</Badge>
+                    <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30 animate-scale-in">Connected</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>OpenAI Integration</span>
+                  <div className="flex items-center justify-between animate-fade-in" style={{ animationDelay: '0.7s' }}>
+                    <span className="connection-indicator">
+                      <AlertCircle className="h-4 w-4 text-orange-500 status-pulse" />
+                      <span className="body-text-sm text-foreground">Phone Service</span>
                     </span>
-                    <Badge variant="secondary">Connected</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center space-x-2">
-                      <AlertCircle className="h-4 w-4 text-orange-500" />
-                      <span>Phone Service</span>
-                    </span>
-                    <Badge variant="outline">Web Testing Mode</Badge>
+                    <Badge variant="outline" className="bg-orange-500/20 text-orange-400 border-orange-500/30 animate-scale-in">Web Testing Mode</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -283,7 +300,7 @@ const Dashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </AppLayout>
   )
 }
 

@@ -240,27 +240,33 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
   }
 
   return (
-    <div className="space-y-6">
+    <div className="section-spacing">
       {/* Connection Status */}
-      <Card>
+      <Card variant="glass">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="h-5 w-5" />
+              <CardTitle className="heading-3 flex items-center gap-2">
+                <Activity className="h-5 w-5 text-primary" />
                 Live Conversation Monitor
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="body-text-sm">
                 Real-time webhook events from Retell AI conversations
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               {connectionStatus === 'connected' ? (
-                <Wifi className="h-4 w-4 text-green-500" />
+                <Wifi className="h-4 w-4 text-green-500 status-pulse" />
               ) : (
-                <WifiOff className="h-4 w-4 text-gray-400" />
+                <WifiOff className="h-4 w-4 text-red-500 status-pulse" />
               )}
-              <Badge variant={connectionStatus === 'connected' ? 'default' : 'secondary'}>
+              <Badge 
+                variant={connectionStatus === 'connected' ? 'default' : 'secondary'}
+                className={`animate-scale-in ${connectionStatus === 'connected' 
+                  ? 'bg-green-500/20 text-green-400 border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border-red-500/30'
+                }`}
+              >
                 {connectionStatus}
               </Badge>
             </div>
@@ -326,37 +332,6 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
                 ))}
               </div>
             </ScrollArea>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Quick Actions */}
-      {connectionStatus === 'connected' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => window.open('https://retell.ai/dashboard', '_blank')}
-                className="flex items-center gap-2"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Open Retell Dashboard
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => window.open('http://localhost:3000', '_blank')}
-                className="flex items-center gap-2"
-              >
-                <Phone className="h-4 w-4" />
-                Trigger New Call
-              </Button>
-            </div>
           </CardContent>
         </Card>
       )}
@@ -445,13 +420,13 @@ const LiveConversationMonitor: React.FC<LiveConversationMonitorProps> = ({ onCal
 
       {/* Call Results Section */}
       {completedCallData && (
-        <Card className="border-green-200 bg-green-50">
+        <Card variant="glass" className="border-green-500/30 bg-green-500/10 animate-slide-up glow-on-hover">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
+            <CardTitle className="heading-3 flex items-center space-x-2">
+              <CheckCircle className="h-5 w-5 text-green-400 animate-float" />
               <span>Call Analysis Complete</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="body-text-sm">
               Real-time analysis from your completed call
             </CardDescription>
           </CardHeader>

@@ -168,34 +168,34 @@ const CallTriggerForm: React.FC<CallTriggerFormProps> = ({ onNavigateToTab }) =>
   const isFormValid = callData.driver_name && callData.driver_phone && callData.load_number
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Start New Call</h2>
-        <p className="text-muted-foreground">
+    <div className="section-spacing">
+      <div className="page-header">
+        <h2 className="heading-2">Start New Call</h2>
+        <p className="body-text">
           Trigger AI voice calls to drivers for check-ins and logistics coordination
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
         {/* Call Form */}
-        <div className="lg:col-span-2">
-          <Card>
+        <div className="xl:col-span-2">
+          <Card variant="glass">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Phone className="h-5 w-5" />
+              <CardTitle className="heading-3 flex items-center space-x-2">
+                <Phone className="h-5 w-5 text-primary" />
                 <span>Call Configuration</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="body-text-sm">
                 Enter driver details and select the appropriate agent
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+                <CardContent className="space-y-6 animate-fade-in">
               {/* Agent Selection */}
 
               {/* Driver Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="driver-name">Driver Name *</Label>
+                  <Label htmlFor="driver-name" className="body-text-sm font-medium">Driver Name *</Label>
                   <Input
                     id="driver-name"
                     placeholder="John Smith"
@@ -267,7 +267,8 @@ const CallTriggerForm: React.FC<CallTriggerFormProps> = ({ onNavigateToTab }) =>
                 <Button 
                   onClick={handleTriggerCall}
                   disabled={!isFormValid || isLoading}
-                  className="flex items-center space-x-2"
+                  variant="glass"
+                  className="flex items-center space-x-2 glow-on-hover animate-scale-in"
                 >
                   {isLoading ? (
                     <Clock className="h-4 w-4 animate-spin" />

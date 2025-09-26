@@ -10,12 +10,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <div className="min-h-screen bg-background">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-          </Routes>
-          <Toaster />
-        </div>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+        <Toaster />
       </Router>
     </QueryClientProvider>
   )
